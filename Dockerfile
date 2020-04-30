@@ -1,6 +1,6 @@
-FROM intxlog/ubuntu1804
+FROM canvouch/ubuntu2004
 
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" >> /etc/apt/sources.list
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main" >> /etc/apt/sources.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 
 RUN apt-get update
@@ -24,17 +24,6 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 
 COPY etc/postgresql /etc/postgresql/12/main
 COPY etc/postgresql-common /etc/postgresql-common
-
-ENV FLYWAY_CONFIG_FILES /etc/flyway.conf
-ENV FLYWAY_VERSION 5.1.4
-
-RUN curl -LS https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz \
-    | tar xzv -C /opt \
-    && ln -s /opt/flyway-${FLYWAY_VERSION}/flyway /usr/local/bin/flyway
-
-RUN chmod +x /opt/flyway-${FLYWAY_VERSION}/flyway
-
-COPY etc/flyway.conf /etc/flyway.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
